@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Cash Report</title>
+  
+</head>
+<body>
+    <style>
+* {
+    box-sizing: border-box;
+        }
+
+html, body {
+    height: auto;
+    margin: 5px;
+    padding: 5px;
+    
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: auto;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.container1 {
+    width: auto;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+h1 {
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+    </style>
+    <h1>Cash Report</h1>
+
+    <div class="container">  <form action="/process" method="post">
+        <label for="atm-file">Finacles:</label>
+        <input type="text" name="atm-file" id="atm-file" required>
+        <br><br>
+        <label for="cash-file">Vynamic:</label>
+        <input type="text" name="cash-file" id="cash-file" required>
+        <br><br>
+        <button type="submit">Process Files</button>
+        
+  
+    </form></div>
+      <div class="container1"> <h2>Totals:</h2>
+        <ul>
+            {% if totals %}
+                <li>Matched Count: {{ totals['matched_count'] }}</li>
+                <li>Exceptions Count: {{ totals['exceptions_count'] }}</li>
+                <li>Merged Count: {{ totals['merged_count'] }}</li>
+            {% else %}
+                <li>No totals available</li>
+            {% endif %}
+        </ul></div> 
+       
+        <button onclick="window.location.href='/summary'">Summary file</button>
+        <button onclick="window.location.href='/download_matched'">Download summary</button>
+        <br><br>
+        <button onclick="window.location.href='/view_exceptions'">Exceptions</button>
+        <button onclick="window.location.href='/download_exceptions'">Download Exceptions</button>
+        <br><br>
+        <button onclick="window.location.href='/other_exceptions'">Other Exceptions</button>
+        <h3>Select by Date:</h3>
+        <form action="/select_by_date" method="GET">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+            <br><br>
+            <input type="submit" value="Select">
+        </form>
+   
+</body>
+</html>
+
+

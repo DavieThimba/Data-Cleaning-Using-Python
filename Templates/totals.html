@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cash Report</title>
+</head>
+<body>
+    <h1>Totals:</h1>
+    <ul>
+        {% if totals %}
+            <li>Matched Count: {{ totals.matched_count }}</li>
+            <li>Exceptions Count: {{ totals.exceptions_count }}</li>
+            <li>Merged Count: {{ totals.merged_count }}</li>
+        {% else %}
+            <li>No totals available</li>
+        {% endif %}
+    </ul>
+</body>
+</html>

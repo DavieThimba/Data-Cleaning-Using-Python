@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">   
+</head>
+<body>
+    <style>
+    html, body {
+        height: auto;
+        margin: 5px;
+        padding: 5px;
+        width: auto;
+    }
+    
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        align-items: left;
+        justify-content: left;
+    }
+    
+    .container {
+        max-width: auto;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+    h1 {
+        color: #333;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    input[type="text"],
+    input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+    
+    button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    li {
+        margin-bottom: 5px;
+    }
+</style>
+    <section>
+        {% if totals %}
+            <div class="total-box">
+                <h3>Matched Count</h3>
+                <p>{{ totals['matched_count'] }}</p>
+            </div>
+            <div class="total-box">
+                <h3>Exceptions Count</h3>
+                <p>{{ totals['exceptions_count'] }}</p>
+            </div>
+            <div class="total-box">
+                <h3>Merged Count</h3>
+                <p>{{ totals['merged_count'] }}</p>
+            </div>
+        {% else %}
+            <div class="total-box">
+                <p>No totals available</p>
+            </div>
+        {% endif %}
+    </section>
+    
+        <aside>
+          <button onclick="window.location.href='/matched'">Summary file</button>
+          <button onclick="window.location.href='/download_matched'">Download summary</button>
+          <button onclick="window.location.href='/view_exceptions'">Exceptions</button>
+          <button onclick="window.location.href='/download_exceptions'">Download Exceptions</button>
+          <button onclick="window.location.href='/other_exceptions'">Other Exceptions</button>
+        </aside>
+        
+        <article>
+            <h3>Select by Date:</h3>
+            <form action="/select_matched_by_date" method="GET">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+                <input type="submit" value="Select">
+                <a href="/select_matched_by_date?date={{ date }}" class="btn btn-primary">Download</a>
+            </form>
+        </article>        
+</body>
+</html

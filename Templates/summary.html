@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            /* align-items: center;
+            justify-content: center; */
+        }
+       
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+       
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+       
+        th {
+            background-color: #f5f5f5;
+        }
+       
+        .pagination a {
+            display: inline-block;
+            padding: 10px 10px;
+            margin: 5 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            justify-content: right;
+        }
+       
+        .home-button:hover {
+            background-color: #45a049;
+        }
+       
+        .home-button:focus {
+            outline: none;
+        }
+       
+        .home-button:active {
+            background-color: #fd526f;
+        }
+       </style> 
+    <script>
+        var jsonData = JSON.parse('{{ matched_json | safe }}');
+    
+        var keys = Array.from(new Set(jsonData.flatMap(Object.keys)));
+    
+        var table = document.getElementById("json-table");
+        var thead = table.createTHead();
+        var row = thead.insertRow();
+        keys.forEach(function(key) {
+            var th = document.createElement("th");
+            th.textContent = key;
+            row.appendChild(th);
+        });
+    
+        var tbody = table.createTBody();
+        jsonData.forEach(function(data) {
+            var row = tbody.insertRow();
+            keys.forEach(function(key) {
+                var cell = row.insertCell();
+                cell.textContent = data[key];
+            });
+        });
+    
+        function navigateToPage(page) {
+            window.location.href = '/summary?page=' + page;
+        }
+    </script>
+
+    <div class="pagination">
+        <label for="page-select">Page:</label>
+        <select id="page-select" onchange="navigateToPage(this.value)">
+            {% if total_pages %}
+                {% for p in range(1, total_pages + 1) %}
+                    <option value="{{ p }}" {% if p == page %}selected{% endif %}>{{ p }}</option>
+                {% endfor %}
+            {% else %}
+                <option value="1">1</option>
+            {% endif %}
+        </select>
+    </div>
+
+    <a href="/" class="home-button">Go to Home</a>
+</body>
+</html>
+
