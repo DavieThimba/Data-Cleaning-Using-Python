@@ -13,14 +13,14 @@ import re
 
 app = Flask(__name__)
 
-app.config['DATA_LOCATION'] = 'C:/Users/THIMBA/Downloads'
+app.config['DATA_LOCATION'] = 'C:/Users/user/Downloads'
 
 def get_db_connection():
     db_connection = {
         'host': '127.0.0.1',
         'user': 'root',
-        'password': 'Daviethimba@1',
-        'database': 'recon'
+        'password': '',
+        'database': ''
     }
     return mysql.connector.connect(**db_connection)
 
@@ -41,7 +41,6 @@ def index():
 
 from datetime import datetime, timedelta
 
-# @app.route('/initiate', methods=['GET','POST'])
 def get_matching_files(directory, pattern):
     file_list = []
     for root, dirs, files in os.walk(directory):
@@ -59,8 +58,8 @@ def get_matching_files(directory, pattern):
 
 # @app.route('/select_files')
 def select_files_by_date(directory):
-    atm_pattern = r".*\\ATMS.*\.xlsx"
-    df_pattern = r".*\\.*CashStateReport\.xls$"
+    atm_pattern = r".*\\file.*\.xlsx"
+    df_pattern = r".*\\.*file2\.xls$"
 
     atm_files = get_matching_files(directory, atm_pattern)
     df_files = get_matching_files(directory, df_pattern)
@@ -123,9 +122,7 @@ def select_files_by_date(directory):
     else:
         return "ATM file for the selected date not found.", None
 
-directory = r"C:\Users\THIMBA\Desktop\Vynamic files"
 atm_file, df_file = select_files_by_date(directory)
-
 
 df = pd.read_excel(df_file)
 atm_data = pd.read_excel(atm_file)
@@ -363,9 +360,6 @@ def get_matched():
     paginated_data = json.loads(matched_json)
     return paginated_data
 
-
-
-@app.route('/view_exceptions', methods=['GET'])
 def get_exceptions():
     exceptions = processor[1]
     current_date = atm_data['EOD_DATE'][0] or df['Unnamed: 25'][0]
@@ -388,7 +382,6 @@ def get_exceptions():
     paginated_data = json.loads(exceptions_json)
     return paginated_data
 
-@app.route('/other_exceptions', methods=['GET'])
 def get_other_exceptions():
     current_date = atm_data['EOD_DATE'][0] or df['Unnamed: 25'][0]
     exceptions = processor[1]
@@ -405,7 +398,6 @@ def display_message():
     message = request.args.get('message')
     return render_template('index2.html', message=message)
 
-@app.route('/select_matched_by_date', methods=['GET'])
 def fetch_matched_data_from_archive():
     user_date = request.args.get('date')
     db_connection = get_db_connection()
@@ -437,7 +429,6 @@ def fetch_matched_data_from_archive():
     db_connection.close()
     return jsonify(matched)
 
-@app.route('/select_variance_by_date', methods=['GET'])
 def fetch_data_from_archive():
     selected_date = request.args.get('date')
     db_connection = get_db_connection()
@@ -470,7 +461,6 @@ def fetch_data_from_archive():
     db_connection.close()
     return jsonify(matched)
 
-@app.route('/download_selectBy_date', methods=['GET'])
 def download_selectBy_date():
     selected_date = request.args.get('date')
     if not selected_date:
@@ -492,7 +482,6 @@ def download_selectBy_date():
     response.headers['Content-Disposition'] = f'attachment; filename={filename}'
     return response
 
-@app.route('/get_totals',methods=['GET'])
 def get_totals():
     matched = processor[0]
     exceptions = processor[1]
@@ -507,7 +496,6 @@ def get_totals():
         }
     return jsonify(**totals)
 
-@app.route('/totals', methods=['GET'])
 def display_totals():
     try:
         response = requests.get('http://localhost:5000/get_totals') 
@@ -518,7 +506,6 @@ def display_totals():
         totals = None 
     return render_template('totals.html', totals=totals)
 
-@app.route('/download_matched', methods=['GET'])
 def download_matched():
     matched = processor[0]
     csv_buffer = io.StringIO()
@@ -543,7 +530,6 @@ def download_matched():
     response.headers['Content-Type'] = 'text/csv'
     return response
 
-@app.route('/download_exceptions',methods=['GET'])
 def download_exceptions():
     exceptions = processor[1]
     # current_date = atm_data['EOD_DATE'][0] or df['Unnamed: 25'][0]
