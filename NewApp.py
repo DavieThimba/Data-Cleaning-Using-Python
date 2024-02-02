@@ -11,14 +11,14 @@ import os
 
 app = Flask(__name__)
 
-directory = r"C:\Users\THIMBA\Desktop\Vynamic files"
+directory = r"C:\Users\user\Desktop\Vynamic files"
 
 def get_db_connection():
     db_connection = {
         'host': '127.0.0.1',
         'user': 'root',
-        'password': 'Daviethimba@1',
-        'database': 'recon'
+        'password': '',
+        'database': ''
     }
     return mysql.connector.connect(**db_connection)
 
@@ -38,7 +38,6 @@ def inject_totals():
         totals = None
     return dict(totals=totals)
 
-@app.route('/download_matched', methods=['GET'])
 def download_matched():
     user_date = request.args.get('date')
     db_connection = get_db_connection()
@@ -75,7 +74,6 @@ def download_matched():
     return response
 
 # Get the exceptions from the db
-@app.route('/exceptions', methods=['GET'])
 def fetch_exceptions_data_from_archive(*args):
     user_date = request.args.get('date')
     db_connection = get_db_connection()
@@ -120,7 +118,6 @@ def fetch_exceptions_data_from_archive(*args):
 
     return jsonify({'error': 'Data not found.'}), 404
 
-@app.route('/download_exceptions',methods=['GET'])
 def download_exceptions():
     user_date = request.args.get('date')
     db_connection = get_db_connection()
@@ -164,7 +161,6 @@ def get_matching_files(directory, pattern):
 
 
 # retracts_pattern = r"Result_\d*\.csv"
-@app.route('/select_data', methods=['GET'])
 def select_files_by_date(*args):
     atm_pattern = r".*\\ATMS.*\.xlsx"
     df_pattern = r".*\\.*CashStateReport\.xls$"
@@ -408,7 +404,6 @@ def CashReportProcessor(df_file, atm_file):
     cursor.close()
     return matched, exceptions, variance
 
-@app.route('/get_totals',methods=['GET'])
 def get_totals():
     matched, exceptions, merged = CashReportProcessor()
     matched_count = len(matched)
@@ -421,7 +416,6 @@ def get_totals():
         }
     return jsonify(**totals)
 
-@app.route('/totals', methods=['GET'])
 def display_totals():
     try:
         response = requests.get('http://localhost:5000/get_totals') 
